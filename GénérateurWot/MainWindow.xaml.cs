@@ -91,6 +91,8 @@ namespace GénérateurWot
             Players.Add(new Player("nath231", "524090414", "3c4ac24e944e47f2b3584a83c18092ac9263c83b"));
             Players.Add(new Player("Mathieu1er", "528189939", "dd6939fb1a4d5c66cd40bb16dac4806cdca59e4c"));
 
+            
+            
             DbPlayer player = new DbPlayer(Players[0]);
             player.WriteToDb();
             player.Player = Players[1];
@@ -111,7 +113,6 @@ namespace GénérateurWot
 
             PlayerStuffs.Add(J1);
             PlayerStuffs.Add(J2);
-
             Loader.LoadBackupsFor(Players);
             CurrentMode = GameMode.Random;
         }

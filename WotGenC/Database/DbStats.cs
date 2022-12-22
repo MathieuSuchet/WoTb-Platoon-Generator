@@ -23,10 +23,28 @@ namespace WotGenC.Database
             if (cnn.State != ConnectionState.Open) return false;
 
             SqlCommand command = new SqlCommand(
-                $@"INSERT INTO Stats (IDp, IDt, Spotted, Hits, Frags, NumberOfBattles,Wins ,Losses, MaxXp1B, TotalDmgDlt, TotalDmgRecvd, MaxFrags1B, TotalShots, Xp, WinAndSurvived, SurvivedBattles, DroppedCapturePoints, Date) VALUES ({Stats.PlayerId},'{Stats.TankId}', '{Stats.Spotted}', '{Stats.Hits}', '{Stats.Frags}', '{Stats.NumberOfBattles}', '{Stats.Wins}', '{Stats.Losses}', '{Stats.MaxXp1B}', '{Stats.TotalDmgDlt}', '{Stats.TotalDmgRecvd}', '{Stats.MaxFrags1B}', '{Stats.TotalShots}', '{Stats.Xp}', '{Stats.WinAndSurvived}', '{Stats.SurvivedBattles}','{Stats.DroppedCapturePoints}', '{new SqlDateTime(DateTime.Now)}')", cnn);
+                $"INSERT INTO Stats (IDp, IDt, Spotted, Hits, Frags, NumberOfBattles,Wins ,Losses, MaxXp1B, TotalDmgDlt, TotalDmgRecvd, MaxFrags1B, TotalShots, Xp, WinAndSurvived, SurvivedBattles, DroppedCapturePoints, Date) VALUES ({Stats.PlayerId},'{Stats.TankId}', '{Stats.Spotted}', '{Stats.Hits}', '{Stats.Frags}', '{Stats.NumberOfBattles}', '{Stats.Wins}', '{Stats.Losses}', '{Stats.MaxXp1B}', '{Stats.TotalDmgDlt}', '{Stats.TotalDmgRecvd}', '{Stats.MaxFrags1B}', '{Stats.TotalShots}', '{Stats.Xp}', '{Stats.WinAndSurvived}', '{Stats.SurvivedBattles}','{Stats.DroppedCapturePoints}', '{new SqlDateTime(DateTime.Now)}')", cnn);
 
             command.ExecuteNonQuery();
+
+            SqlCommand GetStatsKey =
+                new SqlCommand(
+                    $"SELECT Ids FROM Stats WHERE Date = (SELECT MAX(Date) FROM Stats WHERE IDp = {Stats.PlayerId} AND IDt = {Stats.TankId})", cnn);
+
+            var reader = GetStatsKey.ExecuteReader();
+            reader.Read();
+
+            int ids = (int)reader[0];
+            reader.Close();
             
+
+            foreach (var statsKilledTank in Stats.KilledTanks)
+            {
+                if(statsKilledTank.Key.Nom == "Unknown") continue;
+                command = new SqlCommand(
+                    $"INSERT INTO KilledTanks(Ids, Idt, NbKills) VALUES ({ids},{int.Parse(statsKilledTank.Key.Id)},{statsKilledTank.Value})", cnn);
+                command.ExecuteNonQuery();
+            }
             cnn.Close();
 
             return true;

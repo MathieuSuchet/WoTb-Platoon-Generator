@@ -67,6 +67,9 @@
                         </dvc:PieSeries>
                     </dvc:Chart.Series>
                 </dvc:Chart>
+                <dvc:Chart Title="" Margin="0,20,0,0">
+                    
+                </dvc:Chart>
             </StackPanel>
 
             <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">

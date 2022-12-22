@@ -39,7 +39,10 @@ namespace WotGenC
 
                 foreach (var dbtank in player.Tanks.Select(playerTank => new DbTank(playerTank)))
                 {
-                    dbtank.WriteToDb();
+                    if (dbtank.WriteToDb())
+                    {
+                        Debug.WriteLine($"{dbtank.Tank.Nom} added ({dbtank.Tank.Id})");
+                    }
                 }
 
                 // using (StreamReader reader = new StreamReader($"Backups/{player.Id}.json"))
@@ -144,6 +147,55 @@ namespace WotGenC
                 10 => Tier.X,
                 _ => Tier.X
             };
+        }
+
+        public static bool LoadAllTanks(Stream stream)
+        {
+            if (stream is null) return false;
+
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string json = reader.ReadToEnd();
+
+                if (!RequestVerifyier.CheckResult(json))
+                {
+                    return false;
+                }
+                
+                var p = JObject.Parse(json);
+
+                int i = 0;
+
+                foreach (var token in p["data"])
+                {
+                    Debug.WriteLine(token.First);
+                    string idt = (string)token.First["tank_id"];
+                    using (StreamReader reader2 = new StreamReader("AllTanks.json"))
+                    {
+                        string json2 = reader2.ReadToEnd();
+                        var p2 = JObject.Parse(json2);
+
+                        if (p2["data"][idt] != null){
+                            var nom = (string)p2["data"][idt]["name"];
+                            var tier = (int)p2["data"][idt]["tier"];
+
+                            TankType type = StringToType((string)p2["data"][idt]["type"]);
+                            
+                            //Trace.WriteLine($"{idt} => {nom}");
+                            DbTank dbTank = new DbTank(new Tank(idt, nom, IntToTier(tier),
+                                (string)p2["data"][idt]["images"]["preview"], type));
+                            dbTank.WriteToDb();
+                        }
+                        else
+                        {
+                            Trace.WriteLine($"L'id {idt} ne correspond à aucun char");
+                        }
+                    }
+                    i++;
+                }
+            }
+
+            return true;
         }
 
         private static TankType StringToType(string s)

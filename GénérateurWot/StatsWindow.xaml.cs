@@ -140,7 +140,7 @@ namespace GénérateurWot
 
                 KillProbability.Text += Math.Round(s.HitLethality * 100, 2) + "%"; 
                 HitProbability.Text += Math.Round(s.Precision * 100, 2) + "%";
-                FiveShotsProbability.Text += Math.Round(s.ProbabilityOfEqualOrMoreThan(5) * 100, 2) + "%";
+                FiveShotsProbability.Text += Math.Round(s.ProbabilityOfHitsEqualOrMoreThan(5) * 100, 2) + "%";
 
                 float winrate = s.WinRate * 100;
 

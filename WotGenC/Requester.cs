@@ -24,27 +24,14 @@ namespace WotGenC
             return response.GetResponseStream();
         }
 
-        public static void RequestAllTanks(string endFile)
+        public static Stream RequestAllTanks()
         {
             string request = "https://api.wotblitz.eu/wotb/encyclopedia/vehicles/?application_id=f34ba3232ab0297c9d23660a7e18544c&fields=-suspensions%2C+-description%2C+-engines%2C+-prices_xp%2C+-next_tanks%2C+-modules_tree%2C+-nation%2C+-is_premium%2C+-cost%2C+-default_profile%2C+-guns%2C+-turrets%2C";
             HttpWebRequest httprequest = (HttpWebRequest)WebRequest.Create(request);
             httprequest.Method = WebRequestMethods.Http.Get;
             HttpWebResponse response = (HttpWebResponse)httprequest.GetResponse();
 
-            Stream stream = response.GetResponseStream();
-
-            if (response.StatusCode != HttpStatusCode.OK) return;
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            int bytesRead = 0;
-
-
-            FileStream fs = File.Open(Path.Combine(Directory.GetCurrentDirectory(), endFile), FileMode.OpenOrCreate, FileAccess.Write);
-            while ((bytesRead = stream.Read(buffer, 0, bufferSize)) != 0)
-            {
-                fs.Write(buffer, 0, bytesRead);
-            }
-            fs.Close();
+            return response.GetResponseStream();
         }
 
         public static Stream RequestTankStats(Tank t, Player player)
