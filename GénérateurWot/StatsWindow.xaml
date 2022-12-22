@@ -116,6 +116,12 @@
                 <TextBlock x:Name="TotalDamageDealt" Text="Total damage dealt : " />
                 <TextBlock x:Name="TotalDamageReceived" Text="Total damage received : " />
                 <TextBlock x:Name="ShotsTotal" Text="Total number of shots : " />
+                
+                <TextBlock Text="Probabilities (based on past battles)" TextAlignment="Center" Margin="0,50,0,10" FontWeight="Bold"/>
+                
+                <TextBlock x:Name="HitProbability" Text="Probability to hit a shot : "/>
+                <TextBlock x:Name="KillProbability" Text="Probability to kill with one shot  : "/>
+                <TextBlock x:Name="FiveShotsProbability" Text="Probability of hitting at least 5 shots in one battle : " TextWrapping="Wrap"/>
             </StackPanel>
             
             <StackPanel Grid.Column="3">

@@ -7,6 +7,7 @@ namespace WotGenC
 {
     public struct Stats
     {
+        public int PlayerId, TankId;
 
         public float
             Spotted,
@@ -53,12 +54,46 @@ namespace WotGenC
         public float HeavyKillRate => NbHeaviesKilled / KilledTanks.Sum(x => x.Value);
         
         public float TdKillRate => NbTdsKilled / KilledTanks.Sum(x => x.Value);
+        public float Precision => Hits / TotalShots;
+        public float Destroyed => NumberOfBattles - SurvivedBattles;
+        public float HitLethality => Frags / Hits;
 
-        public Stats(float spotted, float hits, float frags, float numberOfBattles, float wins, 
+        public float ProbabilityOfEqualOrMoreThan(ulong nbHits)
+        {
+            double sum = 0;
+            for (ulong i = nbHits; i < 20; i++)
+            {
+                sum += ProbabilityOfHits(i);
+            }
+
+            return (float)sum;
+        }
+        public double ProbabilityOfHits(ulong nbHits)
+        {
+            Debug.WriteLine("AvgShot and hits : " + Math.Pow(AvgShotsPerGame, nbHits) / Factorial(nbHits) * Math.Exp(-AvgShotsPerGame));
+            Debug.WriteLine(Factorial(nbHits));
+            var result = Math.Pow(AvgShotsPerGame, nbHits) / Factorial(nbHits) * Math.Exp(-AvgShotsPerGame);
+            return result;
+        } 
+
+        private ulong Factorial(ulong n)
+        {
+            ulong fact = 1;
+            for (ulong i = 1; i <= n; i++)
+            {
+                fact *= i;
+            }
+
+            return fact;
+        }
+
+        public Stats(int playerId, int tankId, float spotted, float hits, float frags, float numberOfBattles, float wins, 
             float losses, float maxXp1B, float totalDmgDlt, float totalDmgRecvd, 
             float maxFrags1B, float totalShots, float xp, float winAndSurvived,  
             float survivedBattles, float droppedCapturePoints, Dictionary<Tank, uint> killedTanks)
         {
+            PlayerId = playerId;
+            TankId = tankId;
             Spotted = spotted;
             Hits = hits;
             Frags = frags;

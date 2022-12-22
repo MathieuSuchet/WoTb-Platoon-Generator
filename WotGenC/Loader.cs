@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
+using WotGenC.Database;
 
 namespace WotGenC
 {
@@ -35,6 +36,11 @@ namespace WotGenC
                 DataContractSerializer ser = new DataContractSerializer(typeof(ListOfTanks));
                 var tank = (ListOfTanks)ser.ReadObject(reader);
                 player.Tanks = tank;
+
+                foreach (var dbtank in player.Tanks.Select(playerTank => new DbTank(playerTank)))
+                {
+                    dbtank.WriteToDb();
+                }
 
                 // using (StreamReader reader = new StreamReader($"Backups/{player.Id}.json"))
                 // {

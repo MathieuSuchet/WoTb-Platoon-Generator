@@ -12,7 +12,7 @@ using System.Windows.Media;
 using GénérateurWot.Annotations;
 using Newtonsoft.Json.Linq;
 using WotGenC;
-
+using WotGenC.Database;
 
 
 namespace GénérateurWot
@@ -89,6 +89,8 @@ namespace GénérateurWot
                 KilledTanks.ItemsSource = ListTanksKilled;
 
                 Stats s = new Stats(
+                    int.Parse(CurrentPlayer.Id),
+                    int.Parse(CurrentPlayer.Current.Id),
                     spotted: (float)playerTank["all"]["spotted"],
                     hits: (float)playerTank["all"]["hits"],
                     frags: (float)playerTank["all"]["frags"],
@@ -117,6 +119,9 @@ namespace GénérateurWot
                 
                 ((PieSeries)Chart.Series[0]).ItemsSource = RatioRate;
 
+                DbStats stats = new DbStats(s);
+                stats.WriteToDb();
+
                 //Misc infos
                 Spotted.Text += NumberFormatter.Format_To_Space(s.Spotted);
                 Hits.Text += NumberFormatter.Format_To_Space(s.Hits);
@@ -132,6 +137,10 @@ namespace GénérateurWot
                 Wins.Text += NumberFormatter.Format_To_Space(s.Wins);
                 Losses.Text += NumberFormatter.Format_To_Space(s.Losses);
                 Draws.Text += NumberFormatter.Format_To_Space(s.Draws);
+
+                KillProbability.Text += Math.Round(s.HitLethality * 100, 2) + "%"; 
+                HitProbability.Text += Math.Round(s.Precision * 100, 2) + "%";
+                FiveShotsProbability.Text += Math.Round(s.ProbabilityOfEqualOrMoreThan(5) * 100, 2) + "%";
 
                 float winrate = s.WinRate * 100;
 
