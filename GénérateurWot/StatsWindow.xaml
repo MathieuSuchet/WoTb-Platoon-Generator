@@ -5,195 +5,194 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:GénérateurWot"
         xmlns:conv="clr-namespace:GénérateurWot.Converters"
-        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:dvc="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=DotNetProjects.DataVisualization.Toolkit"
         mc:Ignorable="d"
         Title="Stats"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         Height="{x:Static SystemParameters.PrimaryScreenHeight}"
-        Width="{x:Static SystemParameters.PrimaryScreenWidth}"
-        d:DataContext="{d:DesignInstance local:StatsWindow}">
+        Width="{x:Static SystemParameters.PrimaryScreenWidth}">
     <Window.Background>
         <StaticResource ResourceKey="Background" />
     </Window.Background>
-    
+
     <Window.Resources>
-        <conv:BoolToImageFiltersConverter x:Key="FiltersConverter"></conv:BoolToImageFiltersConverter>
+        <conv:BoolToImageFiltersConverter x:Key="FiltersConverter"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
     </Window.Resources>
 
     <StackPanel>
-        <StackPanel.Resources>
-            <Style TargetType="TextBlock" x:Key="MarginSetter">
-                <Setter Property="Margin" Value="10,10" />
-            </Style>
-        </StackPanel.Resources>
-        <TextBlock HorizontalAlignment="Center" Margin="0,30,0,0" x:Name="TankNameTier"
-                   d:DataContext="{Binding Path=Tank, UpdateSourceTrigger=PropertyChanged}">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0} : Tier {1}">
-                    <Binding Path="Nom" />
-                    <Binding Path="Te" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-        <TextBlock Text="Waiting for server to answer" Margin="0,0,0,30" x:Name="State" HorizontalAlignment="Center" />
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.25*" />
-                <ColumnDefinition Width="0.25*" />
-                <ColumnDefinition Width="0.25*" />
-                <ColumnDefinition Width="0.25*" />
-            </Grid.ColumnDefinitions>
+        <StackPanel Visibility="{Binding Path=Loading, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock" x:Key="MarginSetter">
+                    <Setter Property="Margin" Value="10,10" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock HorizontalAlignment="Center" Margin="0,30,0,0" x:Name="TankNameTier"
+                       d:DataContext="{Binding Path=Tank, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} : Tier {1}">
+                        <Binding Path="Nom" />
+                        <Binding Path="Te" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.25*" />
+                    <ColumnDefinition Width="0.25*" />
+                </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-            <StackPanel Margin="10,0,10,0" HorizontalAlignment="Stretch">
+                <StackPanel Margin="10,0,10,0" HorizontalAlignment="Stretch">
 
-                <TextBlock Text="Charts" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center" />
+                    <TextBlock Text="Charts" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center" />
 
+                    <!--<TextBlock x:Name="LightKillRate" Text="Light kill rate : "/>
+                    <TextBlock x:Name="MedKillRate" Text="Medium kill rate : "/>
+                    <TextBlock x:Name="HeavyKillRate" Text="Heavy kill rate : "/>
+                    <TextBlock x:Name="TdKillRate" Text="TD kill rate : "/>-->
 
-                <!--<TextBlock x:Name="LightKillRate" Text="Light kill rate : "/>
-                <TextBlock x:Name="MedKillRate" Text="Medium kill rate : "/>
-                <TextBlock x:Name="HeavyKillRate" Text="Heavy kill rate : "/>
-                <TextBlock x:Name="TdKillRate" Text="TD kill rate : "/>-->
+                    <dvc:Chart Height="250" HorizontalAlignment="Stretch" Foreground="Black" Background="{x:Null}"
+                               Name="Chart" Margin="0,20,0,0" Title="Tank types kill ratio">
+                        <dvc:Chart.Series>
+                            <!--<dvc:ColumnSeries Title="Experience"
+                                           IndependentValueBinding="{Binding Path=Key}"
+                                           DependentValueBinding="{Binding Path=Value}">
+                            </dvc:ColumnSeries>-->
+                            <dvc:PieSeries IndependentValueBinding="{Binding Path=Key}"
+                                           DependentValueBinding="{Binding Path=Value}">
 
-                <dvc:Chart Height="250" HorizontalAlignment="Stretch" Foreground="Black" Background="{x:Null}"
-                           Name="Chart" Margin="0,20,0,0" Title="Tank types kill ratio">
-                    <dvc:Chart.Series>
-                        <!--<dvc:ColumnSeries Title="Experience"
-                                       IndependentValueBinding="{Binding Path=Key}"
-                                       DependentValueBinding="{Binding Path=Value}">
-                        </dvc:ColumnSeries>-->
-                        <dvc:PieSeries IndependentValueBinding="{Binding Path=Key}"
-                                       DependentValueBinding="{Binding Path=Value}">
+                            </dvc:PieSeries>
+                        </dvc:Chart.Series>
+                    </dvc:Chart>
+                </StackPanel>
 
-                        </dvc:PieSeries>
-                    </dvc:Chart.Series>
-                </dvc:Chart>
-            </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="Battle summaries" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center" />
 
-            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">
-                <TextBlock Text="Battle summaries" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center" />
+                    <TextBlock x:Name="NumberOfBattles" Text="Number of battles : " />
+                    <TextBlock x:Name="Wins" Text="Wins : " Margin="10,0,0,0" />
+                    <TextBlock x:Name="Losses" Text="Losses : " Margin="10,0,0,0" />
+                    <TextBlock x:Name="Draws" Text="Draws : " Margin="10,0,0,0" />
 
-                <TextBlock x:Name="NumberOfBattles" Text="Number of battles : " />
-                <TextBlock x:Name="Wins" Text="Wins : " Margin="10,0,0,0" />
-                <TextBlock x:Name="Losses" Text="Losses : " Margin="10,0,0,0" />
-                <TextBlock x:Name="Draws" Text="Draws : " Margin="10,0,0,0" />
+                    <TextBlock x:Name="WinRate" Text="Winrate : " Margin="0,20,0,0" FontSize="20" />
 
-                <TextBlock x:Name="WinRate" Text="Winrate : " Margin="0,20,0,0" FontSize="20" />
-
-                <Line X1="0" X2="200" Y1="0" Y2="1" Stroke="Black" Margin="0, 20" HorizontalAlignment="Center" />
-
-
-                <TextBlock x:Name="xp" Text="XP (excluding gamemodes) : " />
-                <TextBlock x:Name="SurvivalWinRate" Text="Survival win rate : " />
-                <TextBlock x:Name="SurvivalRate" Text="Survival rate : " />
-
-                <TextBlock x:Name="Spotted" Text="Ennemies spotted : " Margin="0,10,0,0" />
-                <TextBlock x:Name="Frags" Text="Ennemies killed : " />
-
-                <TextBlock x:Name="RatioDltRecvd" Text="Ratio damage dealt / received : " />
+                    <Line X1="0" X2="200" Y1="0" Y2="1" Stroke="Black" Margin="0, 20" HorizontalAlignment="Center" />
 
 
-            </StackPanel>
+                    <TextBlock x:Name="xp" Text="XP (excluding gamemodes) : " />
+                    <TextBlock x:Name="SurvivalWinRate" Text="Survival win rate : " />
+                    <TextBlock x:Name="SurvivalRate" Text="Survival rate : " />
 
-            <StackPanel Grid.Row="0" Grid.Column="2">
-                <TextBlock Text="Averages" TextAlignment="Center" Margin="0,0,0,10" FontWeight="Bold" />
+                    <TextBlock x:Name="Spotted" Text="Ennemies spotted : " Margin="0,10,0,0" />
+                    <TextBlock x:Name="Frags" Text="Ennemies killed : " />
 
-                <TextBlock x:Name="AverageSpots" Text="Average spots per battle : " />
-                <TextBlock x:Name="AverageHits" Text="Average hits per battle : " />
-                <TextBlock x:Name="AverageFrags" Text="Average frags per battle : " />
-                <TextBlock x:Name="AverageShots" Text="Average shots per battle : " />
-                <TextBlock x:Name="AverageDmgDlt" Text="Average damage dealt per battle : " />
-                <TextBlock x:Name="AverageDmgRecvd" Text="Average damage received per battle : " />
-                <TextBlock x:Name="AverageXp" Text="Average XP per battle : " />
+                    <TextBlock x:Name="RatioDltRecvd" Text="Ratio damage dealt / received : " />
 
-                <TextBlock Text="Maximums" TextAlignment="Center" Margin="0,50,0,10" FontWeight="Bold" />
 
-                <TextBlock x:Name="MaxXpOneBattle" Text="Maximum xp in one battle : " />
-                <TextBlock x:Name="MaximumFragsOneBattle" Text="Max frags in one battle : " />
+                </StackPanel>
 
-                <TextBlock Text="Totals" TextAlignment="Center" Margin="0,50,0,10" FontWeight="Bold" />
+                <StackPanel Grid.Row="0" Grid.Column="2">
+                    <TextBlock Text="Averages" TextAlignment="Center" Margin="0,0,0,10" FontWeight="Bold" />
 
-                <TextBlock x:Name="TotalDamageDealt" Text="Total damage dealt : " />
-                <TextBlock x:Name="TotalDamageReceived" Text="Total damage received : " />
-                <TextBlock x:Name="ShotsTotal" Text="Total number of shots : " />
-                <TextBlock x:Name="Hits" Text="Total number of hits dealt : " />
+                    <TextBlock x:Name="AverageSpots" Text="Average spots per battle : " />
+                    <TextBlock x:Name="AverageHits" Text="Average hits per battle : " />
+                    <TextBlock x:Name="AverageFrags" Text="Average frags per battle : " />
+                    <TextBlock x:Name="AverageShots" Text="Average shots per battle : " />
+                    <TextBlock x:Name="AverageDmgDlt" Text="Average damage dealt per battle : " />
+                    <TextBlock x:Name="AverageDmgRecvd" Text="Average damage received per battle : " />
+                    <TextBlock x:Name="AverageXp" Text="Average XP per battle : " />
 
-                <TextBlock Text="Probabilities (based on past battles)" TextAlignment="Center" Margin="0,50,0,10"
-                           FontWeight="Bold" />
+                    <TextBlock Text="Maximums" TextAlignment="Center" Margin="0,50,0,10" FontWeight="Bold" />
 
-                <TextBlock x:Name="HitProbability" Text="Probability to hit a shot : " />
-                <TextBlock x:Name="KillProbability" Text="Probability to kill with one shot  : " />
-                <TextBlock x:Name="FiveShotsProbability"
-                           Text="Probability of hitting at least 5 shots in one battle : " TextWrapping="Wrap" />
-                <TextBlock x:Name="FiveSurvivedBattlesProbability"
-                           Text="Probability of surviving at least 3 battles in a row : " />
-            </StackPanel>
+                    <TextBlock x:Name="MaxXpOneBattle" Text="Maximum xp in one battle : " />
+                    <TextBlock x:Name="MaximumFragsOneBattle" Text="Max frags in one battle : " />
 
-            <StackPanel Grid.Row="0" Grid.Column="3">
-                <TextBlock Text="List of all the tanks killed sorted by the number of kills (descending)"
-                           Margin="0,0,0,10" HorizontalAlignment="Center" Width="300" TextWrapping="Wrap"
-                           TextAlignment="Center" />
+                    <TextBlock Text="Totals" TextAlignment="Center" Margin="0,50,0,10" FontWeight="Bold" />
 
-                <Button HorizontalAlignment="Left" Click="Filters_OnClick">
-                    <Image Source="{Binding Path=FiltersEnabled,
-                                Converter={StaticResource FiltersConverter}}"
-                                Width="20" Height="20" />
-                </Button>
+                    <TextBlock x:Name="TotalDamageDealt" Text="Total damage dealt : " />
+                    <TextBlock x:Name="TotalDamageReceived" Text="Total damage received : " />
+                    <TextBlock x:Name="ShotsTotal" Text="Total number of shots : " />
+                    <TextBlock x:Name="Hits" Text="Total number of hits dealt : " />
 
-                <Button HorizontalAlignment="Left" Click="Filters_OnClick">
-                    <Image Source="{Binding Path=FiltersEnabled,
-                                Converter={StaticResource FiltersConverter}}"
-                           Width="20" Height="20" />
-                </Button>
-                
-                <ListBox ItemsSource="{Binding Path=ListTanksKilled, UpdateSourceTrigger=PropertyChanged}"
-                         x:Name="KilledTanks" MaxHeight="650" Width="300" Background="{x:Null}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
+                    <TextBlock Text="Probabilities (based on past battles)" TextAlignment="Center" Margin="0,50,0,10"
+                               FontWeight="Bold" />
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <TextBlock VerticalAlignment="Center"
-                                           DataContext="{Binding Path=Key, UpdateSourceTrigger=PropertyChanged}">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} : {1}">
-                                            <Binding Path="Nom" />
-                                            <Binding Path="Te" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,0,10">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}Killed {0} times">
-                                            <Binding Path="Value" UpdateSourceTrigger="PropertyChanged" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
+                    <TextBlock x:Name="HitProbability" Text="Probability to hit a shot : " />
+                    <TextBlock x:Name="KillProbability" Text="Probability to kill with one shot  : " />
+                    <TextBlock x:Name="FiveShotsProbability"
+                               Text="Probability of hitting at least 5 shots in one battle : " TextWrapping="Wrap" />
+                    <TextBlock x:Name="FiveSurvivedBattlesProbability"
+                               Text="Probability of surviving at least 3 battles in a row : " />
+                </StackPanel>
 
-                                <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="70" Height="70"
-                                       x:Name="Img" Source="{Binding Path=Key.Image}" />
+                <StackPanel Grid.Row="0" Grid.Column="3">
+                    <TextBlock Text="List of all the tanks killed sorted by the number of kills (descending)"
+                               Margin="0,0,0,10" HorizontalAlignment="Center" Width="300" TextWrapping="Wrap"
+                               TextAlignment="Center" />
 
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
-        </Grid>
+                    <Button HorizontalAlignment="Left" Click="Filters_OnClick">
+                        <Image
+                            Source="{Binding Path=FiltersEnabled,
+                                    RelativeSource={RelativeSource Mode=TemplatedParent},
+                                    Converter={StaticResource FiltersConverter}, UpdateSourceTrigger=PropertyChanged}"
+                            Width="20" Height="20" x:Name="FilterImage" />
+                    </Button>
 
+                    <ListBox ItemsSource="{Binding Path=TanksKilled, UpdateSourceTrigger=PropertyChanged}"
+                             x:Name="KilledTanks" MaxHeight="650" Width="300" Background="{x:Null}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock VerticalAlignment="Center"
+                                               DataContext="{Binding Path=Key, UpdateSourceTrigger=PropertyChanged}">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} : {1}">
+                                                <Binding Path="Nom" />
+                                                <Binding Path="Te" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,0,0,10">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}Killed {0} times">
+                                                <Binding Path="Value" UpdateSourceTrigger="PropertyChanged" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+
+                                    <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="70" Height="70"
+                                           x:Name="Img" Source="{Binding Path=Key.Image}" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Path=Loading, Converter={StaticResource InverseBoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <TextBlock Text="Retrieving data from the server..."></TextBlock>
+        </StackPanel>
     </StackPanel>
 
 </Window>

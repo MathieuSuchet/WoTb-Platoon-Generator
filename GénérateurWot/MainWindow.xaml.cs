@@ -101,7 +101,7 @@ namespace GénérateurWot
         {
             Debug.WriteLine("Creating players...");
             Players.Add(new Player("nath231", "524090414", "8e5547dd4e3e5b2de0fd45d831a0b951ce163c3b"));
-            Players.Add(new Player("Mathieu1er", "528189939", "bd7c03ccc6e1aed03f2f82e25aede880aeb114ce"));
+            Players.Add(new Player("Mathieu1er", "528189939", "9917e86fad1301f4a5d43ca315fee508bb0fafdb"));
 
             DbPlayer player = new DbPlayer(Players[0]);
             player.WriteToDb();
@@ -110,7 +110,6 @@ namespace GénérateurWot
             
             Debug.WriteLine("Initializing components");
             InitializeComponent();
-            
             
             Debug.WriteLine("Assigning players");
             J1.Joueur = Players[0];

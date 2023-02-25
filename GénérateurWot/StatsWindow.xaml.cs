@@ -7,10 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using GénérateurWot.Annotations;
 using Newtonsoft.Json.Linq;
 using WotGenC;
@@ -31,8 +29,21 @@ namespace GénérateurWot
         public bool FiltersEnabled { get; set; }
         public Dictionary<Tank, uint> ListTanksKilled { get; } = new Dictionary<Tank, uint>();
 
+        private bool _loading;
+
+        public bool Loading
+        {
+            get => _loading;
+            set
+            {
+                _loading = value;
+                OnPropertyChanged(nameof(Loading));
+            }
+        }
+
         public StatsWindow()
         {
+            DataContext = this;
             InitializeComponent();
         }
 
@@ -131,7 +142,7 @@ namespace GénérateurWot
             Tank = tank;
             OnPropertyChanged(nameof(Tank));
             
-            DataContext = CurrentPlayer;
+            DataContext = this;
 
             InitializeComponent();
             
@@ -140,9 +151,11 @@ namespace GénérateurWot
             //((PieSeries)Chart.Series[1]).ItemsSource = RatioRate;
 
             KilledTanks.ItemsSource = ListTanksKilled;
+            
+            Show();
 
             Stream stream = Requester.RequestTankStats(tank, CurrentPlayer);
-            State.Visibility = Visibility.Collapsed;
+            Loading = false;
 
             using StreamReader reader = new StreamReader(stream);
             string text = reader.ReadToEnd();
@@ -203,7 +216,6 @@ namespace GénérateurWot
                 );
 
                 FillFieldsWithStat(s);
-                Show();
             }
             catch (Exception e)
             {
@@ -219,6 +231,13 @@ namespace GénérateurWot
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Filters_OnClick(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine($"Filter {FilterImage.Source}");
+            FiltersEnabled = !FiltersEnabled;
+            OnPropertyChanged(nameof(FiltersEnabled));
         }
     }
 }

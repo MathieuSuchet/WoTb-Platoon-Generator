@@ -26,8 +26,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="icons\down_arrow.png" />
     <None Remove="icons\right_arrow.png" />
+    <Content Include="icons\right_arrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="icons\down_arrow.png" />
+    <Content Include="icons\down_arrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-
 </Project>
