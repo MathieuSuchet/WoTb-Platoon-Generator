@@ -86,7 +86,6 @@ namespace WotGenC
             
             using (StreamReader reader = new StreamReader(stream))
             {
-                
                 string json = reader.ReadToEnd();
 
                 if (!RequestVerifyier.CheckResult(json))
@@ -101,7 +100,7 @@ namespace WotGenC
                 Trace.WriteLine("Nombre de chars détectés : " + p["data"][id].Count());
                 while (i < p["data"][id].Count())
                 {
-                    string idt = (string)p["data"][id][i]["tank_id"];
+                    int idt = int.Parse((string)p["data"][id][i]["tank_id"]);
                     using (StreamReader reader2 = new StreamReader("AllTanks.json"))
                     {
                         string json2 = reader2.ReadToEnd();
@@ -153,46 +152,46 @@ namespace WotGenC
         {
             if (stream is null) return false;
 
-            using (StreamReader reader = new StreamReader(stream))
+            using StreamReader reader = new StreamReader(stream);
+            string json = reader.ReadToEnd();
+
+            if (!RequestVerifyier.CheckResult(json))
             {
-                string json = reader.ReadToEnd();
-
-                if (!RequestVerifyier.CheckResult(json))
-                {
-                    return false;
-                }
+                return false;
+            }
                 
-                var p = JObject.Parse(json);
+            var p = JObject.Parse(json);
 
-                int i = 0;
+            int i = 0;
 
-                foreach (var token in p["data"])
+            foreach (var token in p["data"])
+            {
+                Debug.WriteLine(token.First);
+                int idt = int.Parse((string)token.First["tank_id"]);
+                using (StreamReader reader2 = new StreamReader("AllTanks.json"))
                 {
-                    Debug.WriteLine(token.First);
-                    string idt = (string)token.First["tank_id"];
-                    using (StreamReader reader2 = new StreamReader("AllTanks.json"))
-                    {
-                        string json2 = reader2.ReadToEnd();
-                        var p2 = JObject.Parse(json2);
+                    string json2 = reader2.ReadToEnd();
+                    var p2 = JObject.Parse(json2);
 
-                        if (p2["data"][idt] != null){
-                            var nom = (string)p2["data"][idt]["name"];
-                            var tier = (int)p2["data"][idt]["tier"];
+                    if (p2["data"].Contains(idt)){
+                        var nom = (string)p2["data"][idt]["name"];
+                        var tier = (int)p2["data"][idt]["tier"];
 
-                            TankType type = StringToType((string)p2["data"][idt]["type"]);
+                        TankType type = StringToType((string)p2["data"][idt]["type"]);
                             
-                            //Trace.WriteLine($"{idt} => {nom}");
-                            DbTank dbTank = new DbTank(new Tank(idt, nom, IntToTier(tier),
-                                (string)p2["data"][idt]["images"]["preview"], type));
-                            dbTank.WriteToDb();
-                        }
-                        else
-                        {
-                            Trace.WriteLine($"L'id {idt} ne correspond à aucun char");
-                        }
+                        //Trace.WriteLine($"{idt} => {nom}");
+                        Tank tank = new Tank(idt, nom, IntToTier(tier),
+                            (string)p2["data"][idt]["images"]["preview"], type);
+                        DbTank dbTank = new DbTank(tank);
+                        dbTank.WriteToDb();
+                        Settings.AllTanks.Add(tank);
                     }
-                    i++;
+                    else
+                    {
+                        Trace.WriteLine($"L'id {idt} ne correspond à aucun char");
+                    }
                 }
+                i++;
             }
 
             return true;
@@ -210,7 +209,7 @@ namespace WotGenC
             };
         }
 
-        public static List<Tank> FindTanksById(params string[] ids)
+        public static List<Tank> FindTanksById(params int[] ids)
         {
             List<Tank> tanks = new List<Tank>();
 
@@ -232,7 +231,7 @@ namespace WotGenC
             return tanks;
         }
 
-        private static Tank FindTankById(string id)
+        private static Tank FindTankById(int id)
         {
             Tank tank;
             FileStream fs = File.Open(Path.Combine(Directory.GetCurrentDirectory(), "AllTanks.json"), FileMode.OpenOrCreate, FileAccess.Write);

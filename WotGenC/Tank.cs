@@ -9,14 +9,24 @@ namespace WotGenC
     [DataContract]
     public class Tank : IEquatable<Tank>, IComparable<Tank>
     {
-        [DataMember] public string Id { get; set; }
+
+        public static Tank GetTank(int tankId)
+        {
+            foreach (var tank in Settings.AllTanks)
+            {
+                if (tank.Id == tankId) return tank;
+            }
+
+            return null;
+        }
+        [DataMember] public int Id { get; set; }
         [DataMember] public string Nom { get; set; }
         [DataMember] public Tier Te { get; set; }
         [DataMember] public string Image { get; set; }
 
         [DataMember] public TankType Type { get; set; }
 
-        public Tank(string id, string nom, Tier t, string image, TankType type)
+        public Tank(int id, string nom, Tier t, string image, TankType type)
         {
             Id = id;
             Nom = nom;
@@ -52,7 +62,7 @@ namespace WotGenC
             var nomComparison = string.Compare(Nom, other.Nom, StringComparison.Ordinal);
             
             //Same goes
-            return nomComparison != 0 ? nomComparison : string.Compare(Id, other.Id, StringComparison.Ordinal);
+            return nomComparison != 0 ? nomComparison : Id.CompareTo(other.Id);
         }
     }
 }

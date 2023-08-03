@@ -7,9 +7,9 @@ namespace WotGenC
 {
     public struct Stats
     {
-        public int PlayerId, TankId;
+        public readonly int PlayerId, TankId;
 
-        public float
+        public readonly float
             Spotted,
             Hits,
             Frags,
@@ -40,12 +40,12 @@ namespace WotGenC
         public float SurvivalRate => SurvivedBattles / NumberOfBattles;
         public float SurvivalWinRate => WinAndSurvived / NumberOfBattles;
 
-        public Dictionary<Tank, uint> KilledTanks;
+        public Dictionary<int, int> KilledTanks;
 
-        public float NbLightsKilled => KilledTanks.Where(x => x.Key.Type == TankType.LIGHT).Sum(x => x.Value);
-        public float NbMedsKilled => KilledTanks.Where(x => x.Key.Type == TankType.MEDIUM).Sum(x => x.Value);
-        public float NbHeaviesKilled => KilledTanks.Where(x => x.Key.Type == TankType.HEAVY).Sum(x => x.Value);
-        public float NbTdsKilled => KilledTanks.Where(x => x.Key.Type == TankType.TD).Sum(x => x.Value);
+        public float NbLightsKilled => KilledTanks.Where(x => Tank.GetTank(x.Key).Type == TankType.LIGHT).Sum(x => x.Value);
+        public float NbMedsKilled => KilledTanks.Where(x => Tank.GetTank(x.Key).Type == TankType.MEDIUM).Sum(x => x.Value);
+        public float NbHeaviesKilled => KilledTanks.Where(x => Tank.GetTank(x.Key).Type == TankType.HEAVY).Sum(x => x.Value);
+        public float NbTdsKilled => KilledTanks.Where(x => Tank.GetTank(x.Key).Type == TankType.TD).Sum(x => x.Value);
 
         public float LightKillRate => NbLightsKilled / KilledTanks.Sum(x => x.Value);
 
@@ -99,7 +99,7 @@ namespace WotGenC
         public Stats(int playerId, int tankId, float spotted, float hits, float frags, float numberOfBattles, float wins, 
             float losses, float maxXp1B, float totalDmgDlt, float totalDmgRecvd, 
             float maxFrags1B, float totalShots, float xp, float winAndSurvived,  
-            float survivedBattles, float droppedCapturePoints, Dictionary<Tank, uint> killedTanks)
+            float survivedBattles, float droppedCapturePoints, Dictionary<int, int> killedTanks)
         {
             PlayerId = playerId;
             TankId = tankId;

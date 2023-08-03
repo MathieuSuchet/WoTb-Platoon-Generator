@@ -24,7 +24,7 @@ namespace GénérateurWot
         public Dictionary<string, float> Winrate { get; }
         public Dictionary<string, float> RatioRate { get; }
 
-        public Dictionary<Tank, uint> ListTanksKilled { get; } = new Dictionary<Tank, uint>();
+        public Dictionary<int, int> ListTanksKilled { get; } = new Dictionary<int, int>();
 
         public StatsWindow()
         {
@@ -65,11 +65,11 @@ namespace GénérateurWot
                 enumerator.MoveNext();
 
 
-                string[] ids = new string[frags.Count];
+                int[] ids = new int[frags.Count];
                 
                 for (int i = 0; i < frags.Count; i++)
                 {
-                    ids[i] = enumerator.Current.Key;
+                    ids[i] = int.Parse(enumerator.Current.Key);
                     enumerator.MoveNext();
                 }
 
@@ -78,7 +78,7 @@ namespace GénérateurWot
                 for (int i = 0; i < frags.Count; i++)
                 {
                     Debug.WriteLine(tanks[i].Nom);
-                    ListTanksKilled.Add(tanks[i], (uint)frags[ids[i]]);
+                    ListTanksKilled.Add(tanks[i].Id, (int)frags[ids[i]]);
                 }
 
                 var list = ListTanksKilled.ToList();
@@ -90,7 +90,7 @@ namespace GénérateurWot
 
                 Stats s = new Stats(
                     int.Parse(CurrentPlayer.Id),
-                    int.Parse(CurrentPlayer.Current.Id),
+                    CurrentPlayer.Current.Id,
                     spotted: (float)playerTank["all"]["spotted"],
                     hits: (float)playerTank["all"]["hits"],
                     frags: (float)playerTank["all"]["frags"],

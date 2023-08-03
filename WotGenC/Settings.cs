@@ -11,5 +11,7 @@ namespace WotGenC
         public static GameMode GameMode;
 
         public static string ConnectionString = "Server=localhost;Database=master;Trusted_Connection=True;";
+
+        public static List<Tank> AllTanks = new List<Tank>();
     }
 }

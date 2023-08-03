@@ -40,14 +40,36 @@ namespace WotGenC.Database
 
             foreach (var statsKilledTank in Stats.KilledTanks)
             {
-                if(statsKilledTank.Key.Nom == "Unknown") continue;
+                if(Tank.GetTank(statsKilledTank.Key).Nom == "Unknown") continue;
                 command = new SqlCommand(
-                    $"INSERT INTO KilledTanks(Ids, Idt, NbKills) VALUES ({ids},{int.Parse(statsKilledTank.Key.Id)},{statsKilledTank.Value})", cnn);
+                    $"INSERT INTO KilledTanks(Ids, Idt, NbKills) VALUES ({ids},{statsKilledTank.Key},{statsKilledTank.Value})", cnn);
                 command.ExecuteNonQuery();
             }
             cnn.Close();
 
             return true;
+        }
+
+        private static Dictionary<int, int> GetTanksKilled(int tankId, int playerId)
+        {
+            SqlConnection cnn = new SqlConnection(Settings.ConnectionString);
+            cnn.Open();
+
+            SqlCommand command =
+                new SqlCommand(
+                    $"SELECT kt.Idt, kt.NbKills FROM KilledTanks kt, Stats s WHERE s.IDp = {playerId} AND s.IDs = kt.Ids AND s.IDt = {tankId}", cnn);
+
+            var reader = command.ExecuteReader();
+            if (!reader.HasRows) return null;
+
+            Dictionary<int, int> tanksKilled = new Dictionary<int, int>();
+
+            while (reader.Read())
+            {
+                tanksKilled.Add((int)reader[0], (int)reader[1]);
+            }
+
+            return tanksKilled;
         }
 
         public static Stats? GetFromDb(int playerId, int tankId)
@@ -79,9 +101,8 @@ namespace WotGenC.Database
                 winAndSurvived: (int)reader[14],
                 survivedBattles: (int)reader[15],
                 droppedCapturePoints: (int)reader[16],
-                killedTanks: new Dictionary<Tank, uint>()
+                killedTanks: GetTanksKilled(tankId, playerId)
                 );
-
         }
     }
 }
