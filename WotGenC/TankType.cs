@@ -2,9 +2,9 @@
 {
     public enum TankType
     {
-        HEAVY = 0,
-        MEDIUM = 1,
-        LIGHT = 2,
+        Heavy = 0,
+        Medium = 1,
+        Light = 2,
         TD = 3
     }
 }

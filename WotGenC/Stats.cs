@@ -43,9 +43,9 @@ namespace WotGenC
 
         public Dictionary<Tank, uint> KilledTanks;
 
-        public float NbLightsKilled => KilledTanks.Where(x => x.Key.Type == TankType.LIGHT).Sum(x => x.Value);
-        public float NbMedsKilled => KilledTanks.Where(x => x.Key.Type == TankType.MEDIUM).Sum(x => x.Value);
-        public float NbHeaviesKilled => KilledTanks.Where(x => x.Key.Type == TankType.HEAVY).Sum(x => x.Value);
+        public float NbLightsKilled => KilledTanks.Where(x => x.Key.Type == TankType.Light).Sum(x => x.Value);
+        public float NbMedsKilled => KilledTanks.Where(x => x.Key.Type == TankType.Medium).Sum(x => x.Value);
+        public float NbHeaviesKilled => KilledTanks.Where(x => x.Key.Type == TankType.Heavy).Sum(x => x.Value);
         public float NbTdsKilled => KilledTanks.Where(x => x.Key.Type == TankType.TD).Sum(x => x.Value);
 
         public float LightKillRate => NbLightsKilled / KilledTanks.Sum(x => x.Value);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WotGenC.Modes;
 
 namespace WotGenC
 {
@@ -9,6 +10,8 @@ namespace WotGenC
         public static List<Player> Players;
 
         public static GameMode GameMode;
+
+        public static Mode Mode;
 
         public static string ConnectionString = "Server=localhost;Database=master;Trusted_Connection=True;";
     }

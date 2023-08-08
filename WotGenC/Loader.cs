@@ -147,10 +147,10 @@ namespace WotGenC
         {
             return s switch
             {
-                "mediumTank" => TankType.MEDIUM,
-                "heavyTank" => TankType.HEAVY,
+                "mediumTank" => TankType.Medium,
+                "heavyTank" => TankType.Heavy,
                 "AT-SPG" => TankType.TD,
-                "lightTank" => TankType.LIGHT,
+                "lightTank" => TankType.Light,
                 _ => throw new ArgumentException("Wrong type value")
             };
         }
@@ -168,7 +168,7 @@ namespace WotGenC
             {
                 if (all["data"][id] == null)
                 {
-                    tanks.Add(new Tank(id, "Unknown", Tier.I, "None", TankType.HEAVY));
+                    tanks.Add(new Tank(id, "Unknown", Tier.I, "None", TankType.Heavy));
                     continue;
                 }
                 tanks.Add(new Tank(id, (string)all["data"][id]["name"], IntToTier((int)all["data"][id]["tier"]), (string)all["data"][id]["images"]["preview"], StringToType((string)all["data"][id]["type"])));
@@ -187,7 +187,7 @@ namespace WotGenC
                 JObject all = JObject.Parse(text);
                 
                     tank = all["data"][id] == null 
-                        ? new Tank(id, "Unknown", Tier.I, "None", TankType.HEAVY) 
+                        ? new Tank(id, "Unknown", Tier.I, "None", TankType.Heavy) 
                         : new Tank(id, (string)all["data"][id]["name"], IntToTier((int)all["data"][id]["tier"]), (string)all["data"][id]["images"]["preview"],StringToType((string)all["data"][id]["type"]));
             }
             return tank;

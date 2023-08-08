@@ -7,31 +7,32 @@
         xmlns:converters="clr-namespace:GénérateurWot.Converters"
         mc:Ignorable="d"
         Title="Parameters" Height="350" Width="800" d:DataContext="{d:DesignInstance local:MainWindow}">
-    
+
     <Window.Resources>
-        <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
+        <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
+        <converters:StringToModeConverter x:Key="StringToModeConverter"/>
     </Window.Resources>
-    
+
     <Window.Background>
-        <StaticResource ResourceKey="Background"/>
+        <StaticResource ResourceKey="Background" />
     </Window.Background>
-    
-    
+
+
     <StackPanel>
-        <TextBlock Text="Parameters" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+        <TextBlock Text="Parameters" HorizontalAlignment="Center" Margin="0,10,0,0" />
         <Grid Margin="0,50,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.1*"/>
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.1*" />
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.1*" />
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.1*" />
             </Grid.ColumnDefinitions>
-            
+
             <StackPanel Grid.Column="1">
                 <WrapPanel HorizontalAlignment="Center" Margin="0,10">
-                    <TextBlock Text="Missions" VerticalAlignment="Center" Width="100" TextAlignment="Center"/>
-                    <CheckBox 
+                    <TextBlock Text="Missions" VerticalAlignment="Center" Width="100" TextAlignment="Center" />
+                    <CheckBox
                         Content="{Binding 
                             Path=IsMission, 
                             Converter={StaticResource BoolToStringConverter}
@@ -40,11 +41,11 @@
                         Width="50"
                         x:Name="Mission"
                         VerticalAlignment="Center"
-                        IsChecked="{Binding IsMission}"/>
+                        IsChecked="{Binding IsMission}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Center" Margin="0,10">
-                    <TextBlock Text="Challenges" VerticalAlignment="Center" Width="100" TextAlignment="Center"/>
-                    <CheckBox 
+                    <TextBlock Text="Challenges" VerticalAlignment="Center" Width="100" TextAlignment="Center" />
+                    <CheckBox
                         Content="{Binding 
                             Path=ChallengesOnOff, 
                             Converter={StaticResource BoolToStringConverter}
@@ -53,11 +54,12 @@
                         Width="50"
                         VerticalAlignment="Center"
                         x:Name="Challenge"
-                        IsChecked="{Binding ChallengesOnOff}"/>
+                        IsChecked="{Binding ChallengesOnOff}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Center" Margin="0,10">
-                    <TextBlock Text="Pénalité supplémentaire" VerticalAlignment="Center" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
-                    <CheckBox 
+                    <TextBlock Text="Pénalité supplémentaire" VerticalAlignment="Center" Width="100"
+                               TextWrapping="Wrap" TextAlignment="Center" />
+                    <CheckBox
                         Content="{Binding 
                             Path=SuppPenalty, 
                             Converter={StaticResource BoolToStringConverter}
@@ -66,11 +68,12 @@
                         Width="50"
                         VerticalAlignment="Center"
                         x:Name="PenSupp"
-                        IsChecked="{Binding SuppPenalty, UpdateSourceTrigger=PropertyChanged}"/>
+                        IsChecked="{Binding SuppPenalty, UpdateSourceTrigger=PropertyChanged}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Center" Margin="0,10">
-                    <TextBlock Text="Impossible de tirer le meme char 2 fois d'affilée" VerticalAlignment="Center" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
-                    <CheckBox 
+                    <TextBlock Text="Impossible de tirer le meme char 2 fois d'affilée" VerticalAlignment="Center"
+                               Width="100" TextWrapping="Wrap" TextAlignment="Center" />
+                    <CheckBox
                         Content="{Binding 
                             Path=SameTankTwice, 
                             Converter={StaticResource BoolToStringConverter}
@@ -79,16 +82,35 @@
                         Width="50"
                         VerticalAlignment="Center"
                         x:Name="CanRollTwice"
-                        IsChecked="{Binding SameTankTwice, UpdateSourceTrigger=PropertyChanged}"/>
+                        IsChecked="{Binding SameTankTwice, UpdateSourceTrigger=PropertyChanged}" />
                 </WrapPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3">
+                <Border BorderThickness="0.5" BorderBrush="Black" Padding="10" CornerRadius="10">
+                    <DockPanel>
+                        <TextBlock Text="Gamemode : " VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding GameModes}" HorizontalAlignment="Right" Padding="5" Margin="20,0,0,0" SelectedValue="0"
+                                  Text="{Binding CurrentGameMode}" SelectionChanged="Selector_OnSelectionChanged" />
+                    </DockPanel>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="0.5" Padding="10" CornerRadius="10" Margin="0, 10 0 0">
+                    <StackPanel>
+                        <DockPanel>
+                            <TextBlock Text="Mode : " VerticalAlignment="Center" />
+                            <ComboBox ItemsSource="{Binding ModeNames}" Margin="20,0,0,0" Text="{Binding CurrentMode.Name}" SelectedValue="{Binding Path=CurrentMode.Name}" Padding="5" SelectionChanged="ModeChanged" />
+                        </DockPanel>
+                        <StackPanel Visibility="Collapsed" x:Name="CategoryOptions">
+                            <DockPanel Margin="0, 10, 0, 0">
+                                <TextBlock Text="Tank type : " VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Path=TankTypes}" Text="{Binding Path=Modes[3].SelectedType}" SelectedValue="{Binding Path=Modes[3].SelectedType}" Margin="20, 0, 0, 0" Padding="5" SelectionChanged="TankTypeChanged"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                </Border>
             </StackPanel>
             
-            <StackPanel Grid.Column="3">
-                <WrapPanel>
-                    <TextBlock Text="Gamemode : " VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Modes}" Margin="50,0,0,0" SelectedValue="0" Text="{Binding CurrentMode}" SelectionChanged="Selector_OnSelectionChanged"/>
-                </WrapPanel>
-            </StackPanel>
         </Grid>
     </StackPanel>
 </Window>
