@@ -25,7 +25,6 @@ namespace GénérateurWot
 
         private void ModeChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(((ComboBox)sender).SelectedIndex < 0) return;
             ((MainWindow)DataContext).CurrentMode = ((MainWindow)DataContext).Modes[((ComboBox)sender).SelectedIndex];
             CategoryOptions.Visibility = ((MainWindow)DataContext).CurrentMode is CategoryMode ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -36,12 +35,6 @@ namespace GénérateurWot
             {
                 cm.SelectedType = (TankType)((ComboBox)sender).SelectedValue;
             }
-        }
-
-        private void SubModeChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (!(((MainWindow)DataContext).CurrentMode is CategoryMode) || ((ComboBox)sender).SelectedIndex < 0) return;
-            (((MainWindow)DataContext).CurrentMode as CategoryMode).SubMode = ((MainWindow)DataContext).Modes[((ComboBox)sender).SelectedIndex];
         }
     }
 }

@@ -85,8 +85,6 @@ namespace GénérateurWot
 
         public List<GameMode> GameModes { get; } = Enum.GetValues(typeof(GameMode)).Cast<GameMode>().ToList();
 
-        public List<string> SubModes { get; }
-
         public GameMode CurrentGameMode
         {
             get => _currentGameMode;
@@ -169,7 +167,6 @@ namespace GénérateurWot
             Debug.WriteLine("Initializing components");
             ModeNames = Modes.Select(x => x.Name).ToArray();
             CurrentGameMode = GameMode.Gravity;
-            SubModes = ModeNames[..3].ToList();
             CurrentMode = Modes[1];
             InitializeComponent();
             

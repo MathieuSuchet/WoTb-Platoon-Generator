@@ -1,12 +1,10 @@
-﻿using System.ComponentModel;
-using System.Security;
+﻿using System.Security;
 
 namespace WotGenC.Modes
 {
     public class CategoryMode : Mode
     {
         public TankType SelectedType { get; set; }
-
         public Mode SubMode { get; set; }
 
         public CategoryMode(TankType selectedType, Mode subMode)
@@ -14,7 +12,7 @@ namespace WotGenC.Modes
             SubMode = subMode;
             SelectedType = selectedType;
 
-            Name = "Category mode";
+            Name = "One tank type only | " + SubMode.Name;
             Description = SelectedType.ToString("G") + " tanks only. " + SubMode.Description;
         }
     }

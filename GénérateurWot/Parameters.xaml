@@ -103,11 +103,7 @@
                         <StackPanel Visibility="Collapsed" x:Name="CategoryOptions">
                             <DockPanel Margin="0, 10, 0, 0">
                                 <TextBlock Text="Tank type : " VerticalAlignment="Center"/>
-                                <ComboBox ItemsSource="{Binding Path=TankTypes}" Text="{Binding Path=Modes[3].SelectedType.Name}" SelectedValue="{Binding Path=Modes[3].SelectedType}" Margin="20, 0, 0, 0" Padding="5" SelectionChanged="TankTypeChanged"/>
-                            </DockPanel>
-                            <DockPanel Margin="0, 10, 0, 0">
-                                <TextBlock Text="Mode : " VerticalAlignment="Center"/>
-                                <ComboBox ItemsSource="{Binding Path=SubModes}" Text="{Binding Path=Modes[3].SubMode.Name}" SelectedValue="{Binding Path=Modes[3].SubMode.Name}" Margin="20, 0, 0, 0" Padding="5" SelectionChanged="SubModeChanged"/>
+                                <ComboBox ItemsSource="{Binding Path=TankTypes}" Text="{Binding Path=Modes[3].SelectedType}" SelectedValue="{Binding Path=Modes[3].SelectedType}" Margin="20, 0, 0, 0" Padding="5" SelectionChanged="TankTypeChanged"/>
                             </DockPanel>
                         </StackPanel>
                     </StackPanel>
