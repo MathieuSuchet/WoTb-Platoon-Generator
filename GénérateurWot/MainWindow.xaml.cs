@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -13,7 +12,6 @@ using WotGenC;
 using WotGenC.Challenges;
 using WotGenC.Database;
 using WotGenC.Missions;
-using WotGenC.Modes;
 
 namespace GénérateurWot
 {
@@ -24,35 +22,13 @@ namespace GénérateurWot
     {
         private bool _suppPenalty;
 
-        public Mode[] Modes { get; } =
-        {
-            new ChillMode(),
-            new NormalMode(),
-            new TerribleMode(),
-            new CategoryMode(TankType.Medium, new NormalMode())
-        };
-
-        public string[] ModeNames { get; }
-
-        private Mode _currentMode;
-
-        public Mode CurrentMode
-        {
-            get => _currentMode;
-            set
-            {
-                _currentMode = value;
-                Settings.Mode = CurrentMode;
-            }
-        }
-
         public bool SuppPenalty
         {
             get => _suppPenalty;
             set
             {
                 _suppPenalty = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SuppPenalty));
             }
         }
 
@@ -64,7 +40,7 @@ namespace GénérateurWot
             set
             {
                 _sameTankTwice = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(SameTankTwice));
             }
         }
 
@@ -75,24 +51,22 @@ namespace GénérateurWot
             set
             {
                 _isMission = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsMission));
             } 
         }
 
-        private GameMode _currentGameMode;
+        private GameMode _currentMode;
 
-        public TankType[] TankTypes { get; } = Enum.GetValues(typeof(TankType)).Cast<TankType>().ToArray();
+        public List<GameMode> Modes { get; } = Enum.GetValues(typeof(GameMode)).Cast<GameMode>().ToList();
 
-        public List<GameMode> GameModes { get; } = Enum.GetValues(typeof(GameMode)).Cast<GameMode>().ToList();
-
-        public GameMode CurrentGameMode
+        public GameMode CurrentMode
         {
-            get => _currentGameMode;
+            get => _currentMode;
             set
             {
-                _currentGameMode = value;
-                OnPropertyChanged();
-                Settings.GameMode = CurrentGameMode;
+                _currentMode = value;
+                OnPropertyChanged(nameof(CurrentMode));
+                Settings.GameMode = CurrentMode;
             }
         }
 
@@ -104,7 +78,7 @@ namespace GénérateurWot
             set
             {
                 _currentTier = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentTier));
                 Tier.Text = "Tier " + _currentTier.ToString("G");
             }
         }
@@ -118,7 +92,7 @@ namespace GénérateurWot
             set
             {
                 _challengesOnOff = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(ChallengesOnOff));
             }
         }
 
@@ -165,9 +139,6 @@ namespace GénérateurWot
             player.WriteToDb();
             
             Debug.WriteLine("Initializing components");
-            ModeNames = Modes.Select(x => x.Name).ToArray();
-            CurrentGameMode = GameMode.Gravity;
-            CurrentMode = Modes[1];
             InitializeComponent();
             
             
@@ -183,7 +154,7 @@ namespace GénérateurWot
             PlayerStuffs.Add(J1);
             PlayerStuffs.Add(J2);
             Loader.LoadBackupsFor(Players);
-            
+            CurrentMode = GameMode.Random;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

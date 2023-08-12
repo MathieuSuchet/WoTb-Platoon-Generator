@@ -41,15 +41,15 @@ namespace GénérateurWot
             RatioRate = new Dictionary<string, float>
             {
                 {
-                    CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.Light.ToString("G").ToLower()),
+                    CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.LIGHT.ToString("G").ToLower()),
                     s.LightKillRate
                 },
                 {
-                    CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.Medium.ToString("G").ToLower()),
+                    CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.MEDIUM.ToString("G").ToLower()),
                     s.MediumKillRate
                 },
                 {
-                    CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.Heavy.ToString("G").ToLower()),
+                    CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.HEAVY.ToString("G").ToLower()),
                     s.HeavyKillRate
                 },
                 { CultureInfo.CurrentCulture.TextInfo.ToTitleCase(TankType.TD.ToString("G").ToLower()), s.TdKillRate }
